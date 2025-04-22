@@ -7,19 +7,19 @@ The platform provides a secure, account-based system where users can log in to m
 
 FirstStep ensures every CV has a polished look by offering a clean layout and print-ready format. By focusing on usability and simplicity, it eliminates the stress of formatting and lets users focus on what matters: presenting their qualifications clearly and professionally.
 
-Key Features
-Secure login system for saving and editing CVs
+# Key Features
+- Secure login system for saving and editing CVs
 
-Step-by-step form builder for all essential CV sections
+- Step-by-step form builder for all essential CV sections
 
-Real-time preview of the CV layout
+- Real-time preview of the CV layout
 
-Downloadable, print-ready résumé formats
+- Downloadable, print-ready résumé formats
 
-Responsive design optimized for both desktop and mobile use
+- Responsive design optimized for both desktop and mobile use
 
-Tech Stack
-This project was developed using:
+# Tech Stack
+- # This project was developed using:
 
 HTML – for structured and semantic page content
 
