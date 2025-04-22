@@ -19,15 +19,15 @@ FirstStep ensures every CV has a polished look by offering a clean layout and pr
 - Responsive design optimized for both desktop and mobile use
 
 # Tech Stack
-- # This project was developed using:
+This project was developed using:
 
-HTML – for structured and semantic page content
+- HTML – for structured and semantic page content
 
-CSS – to style the interface with a clean, modern look
+- CSS – to style the interface with a clean, modern look
 
-JavaScript – for interactivity and live preview functionality
+- JavaScript – for interactivity and live preview functionality
 
-Bootstrap 5 – to ensure a responsive, mobile-friendly experience
+- Bootstrap 5 – to ensure a responsive, mobile-friendly experience
 
 FirstStep reflects my passion for creating practical, real-world tools that help people take important steps in their personal and professional lives. As a self-driven project, it allowed me to strengthen my front-end development skills while delivering real value to users.
 
