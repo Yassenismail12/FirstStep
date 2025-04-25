@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+{% block title %}Dashboard | FirstStep{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">Dashboard</h2>
+  </div>
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Welcome, {{ user.firstname }}!</h5>
+      <p class="card-text">Ready to build your professional CV?</p>
+      <a href="#" class="btn btn-success">Create New CV</a>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Activity Summary</h5>
+      <ul>
+        {% for activity in user.activities.all|slice:":5" %}
+          <li>{{ activity.get_activity_type_display }} - {{ activity.created_at|date:"M d, Y H:i" }}</li>
+        {% empty %}
+          <li>No recent activity.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}
