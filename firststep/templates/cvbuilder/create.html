@@ -1,0 +1,29 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block title %}Create CV{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Create Your CV</h2>
+  <form id="cvForm" method="POST" action="{% url 'create_cv' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="cvTitle">CV Title</label>
+      <input type="text" name="title" class="form-control" id="cvTitle" required>
+    </div>
+
+    <div class="form-group">
+      <label for="cvDescription">Description</label>
+      <textarea name="description" class="form-control" id="cvDescription" rows="3"></textarea>
+    </div>
+
+    <!-- Placeholder for dynamic CV sections (e.g. Education, Experience, etc.) -->
+    <div id="sectionsContainer"></div>
+
+    <button type="button" class="btn btn-secondary my-3" onclick="addSection()">Add Section</button>
+    <button type="submit" class="btn btn-primary">Save CV</button>
+  </form>
+</div>
+
+<script src="{% static 'cvbuilder/js/cvbuilder.js' %}"></script>
+{% endblock %}

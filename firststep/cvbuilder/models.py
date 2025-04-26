@@ -1,105 +1,80 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
-from accounts.models import *
+
+from accounts.models import User
+
+TEMPLATE_CHOICES = [
+    ('classic', 'Classic'),
+    ('modern', 'Modern'),
+    ('creative', 'Creative'),
+]
+
+class CV(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255)
+    profession = models.CharField(max_length=255)
+    profile_summary = models.TextField(blank=True)
+    experience_details = models.TextField(blank=True)
+    education_details = models.TextField(blank=True)
+    skills_list = models.TextField(blank=True)
+    template = models.CharField(max_length=20, choices=TEMPLATE_CHOICES, default='classic')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.full_name
 
 class CVTemplate(models.Model):
-    """
-    Predefined CV templates
-    """
     name = models.CharField(max_length=100)
-    preview_image = models.ImageField(upload_to='template_previews/')
-    template_data = models.JSONField()
-    created_at = models.DateTimeField(default=timezone.now)
+    preview_image = models.ImageField(upload_to='templates/previews/', null=True, blank=True)
+    file_reference = models.CharField(max_length=255)  # used to load the correct HTML/PDF layout
 
     def __str__(self):
         return self.name
 
-class Resume(models.Model):
-    """
-    Main CV/Resume model
-    """
-    SHARING_STATUS_CHOICES = [
-        ('private', 'Private'),
-        ('public', 'Public'),
-        ('link', 'Shareable Link'),
-    ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
-    template = models.ForeignKey(CVTemplate, on_delete=models.PROTECT)
-    is_custom_design = models.BooleanField(default=False)
-    sharing_status = models.CharField(max_length=50, choices=SHARING_STATUS_CHOICES, default='private')
-    share_token = models.CharField(max_length=100, blank=True, null=True)
-    pdf_path = models.URLField(blank=True, null=True)
-    current_version = models.IntegerField(default=1)
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Resume #{self.id} for {self.user.username}"
-
-class CVVersion(models.Model):
-    """
-    Version history of CV changes
-    """
-    cv = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='versions')
-    version_number = models.IntegerField()
-    data = models.JSONField()
-    created_at = models.DateTimeField(default=timezone.now)
-
-    class Meta:
-        unique_together = ('cv', 'version_number')
-        ordering = ['-version_number']
-
-    def __str__(self):
-        return f"Version {self.version_number} of CV #{self.cv.id}"
-
 class CVSection(models.Model):
-    """
-    Sections within a CV (Education, Experience, etc.)
-    """
-    SECTION_TYPE_CHOICES = [
-        ('personal', 'Personal Information'),
-        ('education', 'Education'),
+    SECTION_TYPES = [
+        ('personal_info', 'Personal Info'),
+        ('summary', 'Profile Summary'),
         ('experience', 'Work Experience'),
+        ('education', 'Education'),
         ('skills', 'Skills'),
         ('projects', 'Projects'),
-        ('custom', 'Custom Section'),
+        ('certifications', 'Certifications'),
+        ('languages', 'Languages'),
+        ('references', 'References'),
     ]
 
-    cv = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='sections')
-    section_type = models.CharField(max_length=50, choices=SECTION_TYPE_CHOICES)
-    display_order = models.IntegerField()
-    data = models.JSONField()
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='sections')
+    section_type = models.CharField(max_length=50, choices=SECTION_TYPES)
+    order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['display_order']
+        ordering = ['order']
 
     def __str__(self):
-        return f"{self.get_section_type_display()} section for CV #{self.cv.id}"
+        return f"{self.section_type} in {self.cv.title}"
 
-class CVDesign(models.Model):
-    """
-    Custom design settings for a CV
-    """
-    cv = models.OneToOneField(Resume, on_delete=models.CASCADE, related_name='design')
-    design_data = models.JSONField()
+class CVEntry(models.Model):
+    section = models.ForeignKey(CVSection, on_delete=models.CASCADE, related_name='entries')
+    title = models.CharField(max_length=255)
+    subtitle = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+class CVVersion(models.Model):
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='versions')
+    data_snapshot = models.JSONField()
     created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Design for CV #{self.cv.id}"
-
-class CustomField(models.Model):
-    """
-    Additional custom fields for CV sections
-    """
-    cv = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='custom_fields')
-    field_name = models.CharField(max_length=100)
-    field_value = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Custom field '{self.field_name}' for CV #{self.cv.id}"
+        return f"Version at {self.created_at.strftime('%Y-%m-%d %H:%M')}"

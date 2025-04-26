@@ -18,11 +18,13 @@ from django.contrib import admin
 from django.urls import path , include
 from accounts.views_landing import landing_page
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from accounts.views_auth import dashboard_view, login_view , register_view
+from accounts.views_auth import dashboard, login_view , register_view
 from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('cv/', include('cvbuilder.urls')),
     path('api/accounts/', include('accounts.urls')),
     path('', landing_page, name='landing'),
     path('login/', login_view, name='login'),
@@ -44,6 +46,6 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='registration/password_reset_complete.html'
     ), name='password_reset_complete'),
-    path('dashboard/', dashboard_view, name='dashboard'),
+    path('dashboard/', dashboard, name='dashboard'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 ]

@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="container">
+  <h2>My CVs</h2>
+  <a href="{% url 'cv_create' %}" class="btn btn-primary mb-3">Create New CV</a>
+  <ul class="list-group">
+    {% for cv in cvs %}
+      <li class="list-group-item d-flex justify-content-between">
+        {{ cv.title }}
+        <span>
+          <a href="{% url 'cv_edit' cv.pk %}" class="btn btn-sm btn-outline-info">Edit</a>
+        </span>
+      </li>
+    {% empty %}
+      <li class="list-group-item">No CVs yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

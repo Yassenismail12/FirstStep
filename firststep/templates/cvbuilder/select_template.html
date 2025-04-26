@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Choose Your Template</h2>
+    <div class="row">
+        {% for template in templates %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ template.image }}" class="card-img-top" alt="{{ template.name }}">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ template.name }}</h5>
+                    <a href="#" class="btn btn-primary mt-2">Select</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

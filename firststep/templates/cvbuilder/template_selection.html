@@ -1,0 +1,11 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Choose Your CV Template 🎨</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.template }}
+        <button type="submit" class="btn btn-primary mt-3">Continue</button>
+    </form>
+</div>
+{% endblock %}

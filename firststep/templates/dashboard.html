@@ -1,28 +1,50 @@
 {% extends "base_generic.html" %}
-{% block title %}Dashboard | FirstStep{% endblock %}
+<style>
+  .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  @media (max-width: 576px) {
+    .btn-group a,
+    .btn-group button {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-primary">Dashboard</h2>
-  </div>
+<div class="container mt-5">
+  <h1 class="mb-4">Welcome, {{ request.user.firstname }}!</h1>
 
-  <div class="card shadow-sm mb-3">
+  <!-- CV Section -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Your CVs</h4>
+      <a href="{% url 'cv_start' %}" class="btn btn-primary btn-sm">+ Create New CV</a>
+    </div>
     <div class="card-body">
-      <h5 class="card-title">Welcome, {{ user.firstname }}!</h5>
-      <p class="card-text">Ready to build your professional CV?</p>
-      <a href="#" class="btn btn-success">Create New CV</a>
+      {% if cvs %}
+        <ul class="list-group">
+          {% for cv in cvs %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ cv.title }}</span>
+              <div>
+                <a href="{% url 'cv_edit' cv.pk %}" class="btn btn-sm btn-outline-info">Edit</a>
+                <a href="{% url 'cv_preview' cv.pk %}" class="btn btn-sm btn-outline-secondary">Preview</a>
+                <form action="{% url 'cv_delete' cv.pk %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this CV?');">Delete</button>
+                </form>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>You don't have any CVs yet. Start by creating one!</p>
+      {% endif %}
     </div>
   </div>
 
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h5 class="card-title">Activity Summary</h5>
-      <ul>
-        {% for activity in user.activities.all|slice:":5" %}
-          <li>{{ activity.get_activity_type_display }} - {{ activity.created_at|date:"M d, Y H:i" }}</li>
-        {% empty %}
-          <li>No recent activity.</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
+</div>
 {% endblock %}

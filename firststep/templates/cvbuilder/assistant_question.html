@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h4>Step {{ step|add:1 }} of {{ total }}</h4>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>{{ question }}</label>
+      <textarea name="answer" rows="4" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Next</button>
+  </form>
+</div>
+{% endblock %}

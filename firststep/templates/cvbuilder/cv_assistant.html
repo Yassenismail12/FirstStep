@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">CV Assistant</h1>
+  <p>Answer a few questions to automatically generate your CV.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group mb-3">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}
+          <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-warning">Generate CV</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

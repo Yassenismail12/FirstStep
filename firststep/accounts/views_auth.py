@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from accounts.models import User
+from cvbuilder.models import CV
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -52,5 +53,6 @@ def register_view(request):
     return render(request, 'register.html')
 
 @login_required
-def dashboard_view(request):
-    return render(request, 'dashboard.html')
+def dashboard(request):
+    cvs = CV.objects.filter(user=request.user)
+    return render(request, 'dashboard.html', {'cvs': cvs})

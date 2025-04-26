@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="text-end">
+    <a href="{% url 'cv_export_pdf' cv.pk %}" class="btn btn-outline-primary mb-3">Download PDF</a>
+    <a href="{% url 'cv_edit' cv.pk %}" class="btn btn-outline-secondary mb-3">Edit CV</a>
+  </div>
+
+  <div class="card p-4">
+    <h1 class="text-center">{{ cv.full_name }}</h1>
+    <p class="text-center">{{ cv.profession }}</p>
+    <hr>
+
+    <h3>Profile</h3>
+    <p>{{ cv.profile_summary }}</p>
+
+    <h3>Experience</h3>
+    <p>{{ cv.experience_details }}</p>
+
+    <h3>Education</h3>
+    <p>{{ cv.education_details }}</p>
+
+    <h3>Skills</h3>
+    <p>{{ cv.skills_list }}</p>
+
+    <!-- add more sections as needed -->
+  </div>
+</div>
+{% endblock %}
